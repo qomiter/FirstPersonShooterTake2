@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296701031}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.34, z: 0}
+  m_LocalPosition: {x: 0, y: -0.997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2105085553}
@@ -1186,12 +1186,13 @@ MonoBehaviour:
   moveSpeed: 10
   gravityModifier: 2
   jumpPower: 10
+  runSpeed: 12
   charCon: {fileID: 2105085555}
   camTrans: {fileID: 1387956686}
   mouseSensitivity: 2
   invertX: 0
   invertY: 0
-  groundCheckPoint: {fileID: 0}
+  groundCheckPoint: {fileID: 296701032}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 1024
