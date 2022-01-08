@@ -74,7 +74,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
             moveInput.y = jumpPower;
-
             canDoubleJump = true;
         }else if(canDoubleJump && Input.GetKeyDown(KeyCode.Space))
         {
