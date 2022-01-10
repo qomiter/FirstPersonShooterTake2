@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8144416092947333415}
   - component: {fileID: 8821595453167835822}
   m_Layer: 9
-  m_Name: Bullet
+  m_Name: Enemy Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7f0be35fdb9afff43a6f09d27262b039, type: 2}
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -131,8 +131,8 @@ MonoBehaviour:
   theRB: {fileID: 8144416092947333414}
   impactEffect: {fileID: 4738372295808575756, guid: 2ffd308a6a9d6b64fbe5d4b49ee61439, type: 3}
   damage: 1
-  damageEnemy: 1
-  damagePlayer: 0
+  damageEnemy: 0
+  damagePlayer: 1
 --- !u!96 &8821595453167835822
 TrailRenderer:
   serializedVersion: 2
@@ -204,8 +204,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
