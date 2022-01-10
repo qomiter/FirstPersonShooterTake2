@@ -40,6 +40,11 @@ public class BulletController : MonoBehaviour
             //Destroy(other.gameObject);
             other.gameObject.GetComponent<EnemyHealthController>().DamageEnemy(damage);
         }
+        if(other.gameObject.tag == "Headshot"  && damageEnemy)
+        {
+            other.transform.parent.GetComponent<EnemyHealthController>().DamageEnemy(damage * 2);
+            Debug.Log("Headshot Hit");
+        }
 
         if(other.gameObject.tag == "Player" && damagePlayer)
         {

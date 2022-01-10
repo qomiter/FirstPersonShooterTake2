@@ -20,8 +20,10 @@ public class EnemyController : MonoBehaviour
     public GameObject bullet;
     public Transform firePoint;
 
-    public float fireRate;
-    private float fireCount;
+    public float fireRate, waitBetweenShots = 2f, timeToShoot = 1f;
+    private float fireCount, shotWaitCounter, shootTimeCounter;
+
+    public Animator anim;
 
 
 
@@ -29,6 +31,9 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         startPoint = transform.position;
+
+        shootTimeCounter = timeToShoot;
+        shotWaitCounter = waitBetweenShots; 
     }
 
     // Update is called once per frame
@@ -42,7 +47,8 @@ public class EnemyController : MonoBehaviour
             if (Vector3.Distance(transform.position, targetPoint) < distanceToChase)
             {
                 chasing = true;
-                fireCount = 1f;
+                shootTimeCounter = timeToShoot;
+                shotWaitCounter = waitBetweenShots;
             }
             if (chaseCounter > 0)
             {
@@ -53,6 +59,15 @@ public class EnemyController : MonoBehaviour
                     agent.destination = startPoint;
                 }
             }
+            if(agent.remainingDistance < 0.25f)
+            {
+                anim.SetBool("isMoving", false);
+            }
+            else
+            {
+                anim.SetBool("isMoving", true);
+            }
+
         }
         else
         {
@@ -60,7 +75,7 @@ public class EnemyController : MonoBehaviour
 
             //theRB.velocity = transform.forward * moveSpeed;
 
-            if(Vector3.Distance(transform.position, targetPoint) > distanceToStop)
+            if (Vector3.Distance(transform.position, targetPoint) > distanceToStop)
             {
                 agent.destination = targetPoint;
             }
@@ -68,21 +83,66 @@ public class EnemyController : MonoBehaviour
             {
                 agent.destination = transform.position;
             }
-            
+
             if (Vector3.Distance(transform.position, targetPoint) > distanceToLose)
             {
                 chasing = false;
 
                 chaseCounter = keepChasingTime;
             }
-            fireCount-= Time.deltaTime;
 
-            if(fireCount <= 0)
+            if (shotWaitCounter > 0)
             {
-                fireCount = fireRate;
+                shotWaitCounter -= Time.deltaTime;
+                if(shotWaitCounter <= 0)
+                {
+                    shootTimeCounter = timeToShoot;
+                }
 
-                Instantiate(bullet, firePoint.position, firePoint.rotation);
+                anim.SetBool("isMoving", true);
             }
+            else
+            {
+
+                shootTimeCounter -= Time.deltaTime;
+                if (shootTimeCounter > 0)
+                {
+                    fireCount -= Time.deltaTime;
+
+                    if (fireCount <= 0)
+                    {
+                        fireCount = fireRate;
+
+                        firePoint.LookAt(PlayerController.instance.transform.position + new Vector3(0,1.2f,0));
+                        //check the angle to the player
+                        Vector3 targetDir = PlayerController.instance.transform.position - transform.position;
+                        float angle = Vector3.SignedAngle(targetDir, transform.forward, Vector3.up);
+                        if(Mathf.Abs(angle) < 30f)
+                        {
+                            anim.SetTrigger("fireShot");
+
+                            Instantiate(bullet, firePoint.position, firePoint.rotation);
+
+                            
+                        }
+                        else
+                        {
+                            shotWaitCounter = waitBetweenShots; 
+                        }
+
+
+                        
+                    }
+
+                    agent.destination = transform.position; 
+                }
+                else
+                {
+                    shotWaitCounter = waitBetweenShots;
+                }
+                anim.SetBool("isMoving", false);
+            }
+
 
         }
     }

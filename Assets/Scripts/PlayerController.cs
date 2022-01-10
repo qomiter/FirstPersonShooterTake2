@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
             moveInput.y = Physics.gravity.y * gravityModifier * Time.deltaTime;
         }
 
-        canJump = Physics.OverlapSphere(groundCheckPoint.position, 0.25f, whatIsGround).Length > 0;
+        canJump = Physics.OverlapSphere(groundCheckPoint.position, 0.4f, whatIsGround).Length > 0;
 
         if (canJump)
         {
