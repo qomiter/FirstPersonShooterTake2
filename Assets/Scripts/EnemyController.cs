@@ -33,7 +33,7 @@ public class EnemyController : MonoBehaviour
         startPoint = transform.position;
 
         shootTimeCounter = timeToShoot;
-        shotWaitCounter = waitBetweenShots; 
+        shotWaitCounter = waitBetweenShots;
     }
 
     // Update is called once per frame
@@ -59,7 +59,7 @@ public class EnemyController : MonoBehaviour
                     agent.destination = startPoint;
                 }
             }
-            if(agent.remainingDistance < 0.25f)
+            if (agent.remainingDistance < 0.25f)
             {
                 anim.SetBool("isMoving", false);
             }
@@ -94,7 +94,7 @@ public class EnemyController : MonoBehaviour
             if (shotWaitCounter > 0)
             {
                 shotWaitCounter -= Time.deltaTime;
-                if(shotWaitCounter <= 0)
+                if (shotWaitCounter <= 0)
                 {
                     shootTimeCounter = timeToShoot;
                 }
@@ -103,42 +103,45 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-
-                shootTimeCounter -= Time.deltaTime;
-                if (shootTimeCounter > 0)
+                if (PlayerController.instance.gameObject.activeInHierarchy)
                 {
-                    fireCount -= Time.deltaTime;
 
-                    if (fireCount <= 0)
+                    shootTimeCounter -= Time.deltaTime;
+                    if (shootTimeCounter > 0)
                     {
-                        fireCount = fireRate;
+                        fireCount -= Time.deltaTime;
 
-                        firePoint.LookAt(PlayerController.instance.transform.position + new Vector3(0,0.4f,0));
-                        //check the angle to the player
-                        Vector3 targetDir = PlayerController.instance.transform.position - transform.position;
-                        float angle = Vector3.SignedAngle(targetDir, transform.forward, Vector3.up);
-                        if(Mathf.Abs(angle) < 30f)
+                        if (fireCount <= 0)
                         {
-                            anim.SetTrigger("fireShot");
+                            fireCount = fireRate;
 
-                            Instantiate(bullet, firePoint.position, firePoint.rotation);
+                            firePoint.LookAt(PlayerController.instance.transform.position + new Vector3(0, 0.4f, 0));
+                            //check the angle to the player
+                            Vector3 targetDir = PlayerController.instance.transform.position - transform.position;
+                            float angle = Vector3.SignedAngle(targetDir, transform.forward, Vector3.up);
+                            if (Mathf.Abs(angle) < 30f)
+                            {
+                                anim.SetTrigger("fireShot");
 
-                            
+                                Instantiate(bullet, firePoint.position, firePoint.rotation);
+
+
+                            }
+                            else
+                            {
+                                shotWaitCounter = waitBetweenShots;
+                            }
+
+
+
                         }
-                        else
-                        {
-                            shotWaitCounter = waitBetweenShots; 
-                        }
 
-
-                        
+                        agent.destination = transform.position;
                     }
-
-                    agent.destination = transform.position; 
-                }
-                else
-                {
-                    shotWaitCounter = waitBetweenShots;
+                    else
+                    {
+                        shotWaitCounter = waitBetweenShots;
+                    }
                 }
                 anim.SetBool("isMoving", false);
             }
