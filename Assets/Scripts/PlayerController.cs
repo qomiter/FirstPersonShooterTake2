@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     public GameObject bullet;
     public Transform firePoint;
 
+    public Gun activeGun;
+
     private void Awake()
     {
         instance = this;
@@ -36,7 +38,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
     }
 
     // Update is called once per frame
@@ -85,10 +87,11 @@ public class PlayerController : MonoBehaviour
         {
             moveInput.y = jumpPower;
             canDoubleJump = true;
-        }else if(canDoubleJump && Input.GetKeyDown(KeyCode.Space))
+        }
+        else if (canDoubleJump && Input.GetKeyDown(KeyCode.Space))
         {
             moveInput.y = jumpPower;
-            canDoubleJump=false;
+            canDoubleJump = false;
         }
 
         charCon.Move(moveInput * Time.deltaTime);
@@ -110,26 +113,51 @@ public class PlayerController : MonoBehaviour
         camTrans.rotation = Quaternion.Euler(camTrans.rotation.eulerAngles + new Vector3(-mouseInput.y, 0f, 0f));
 
         //Handle Shooting
-        if (Input.GetMouseButtonDown(0))
+        //Single Shot
+        if (Input.GetMouseButtonDown(0) && activeGun.fireCounter <= 0)
         {
             RaycastHit hit;
-            if(Physics.Raycast(camTrans.position, camTrans.forward, out hit, 50f))
+            if (Physics.Raycast(camTrans.position, camTrans.forward, out hit, 50f))
             {
-                if(Vector3.Distance(camTrans.position, hit.point) > 2)
+                if (Vector3.Distance(camTrans.position, hit.point) > 2)
                 {
                     firePoint.LookAt(hit.point);
                 }
-                
+
             }
             else
             {
-                firePoint.LookAt(camTrans.position +(camTrans.forward * 30f));
+                firePoint.LookAt(camTrans.position + (camTrans.forward * 30f));
             }
 
-            Instantiate(bullet, firePoint.position, firePoint.rotation);
+            //Instantiate(bullet, firePoint.position, firePoint.rotation);
+            FireShot();
+        }
+        //Rapid Fire
+        if (Input.GetMouseButton(0) && activeGun.canAutoFire)
+        {
+            if (activeGun.fireCounter <= 0)
+            {
+                FireShot();
+            }
+
         }
 
         anim.SetFloat("moveSpeed", moveInput.magnitude);
         anim.SetBool("onGround", canJump);
+    }
+
+    public void FireShot()
+    {
+        if (activeGun.currentAmmo > 0)
+        {
+            activeGun.currentAmmo--;
+
+            Instantiate(activeGun.bullet, firePoint.position, firePoint.rotation);
+
+            activeGun.fireCounter = activeGun.fireRate;
+
+            UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
+        }
     }
 }
