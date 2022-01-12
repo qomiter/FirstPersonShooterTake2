@@ -43,10 +43,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
-
         activeGun = allGuns[currentGun];
         activeGun.gameObject.SetActive(true);
+        UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
     }
 
     // Update is called once per frame
@@ -151,6 +150,11 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SwitchGun();
+        }
+
         anim.SetFloat("moveSpeed", moveInput.magnitude);
         anim.SetBool("onGround", canJump);
     }
@@ -167,5 +171,20 @@ public class PlayerController : MonoBehaviour
 
             UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
         }
+    }
+
+    public void SwitchGun()
+    {
+        activeGun.gameObject.SetActive(false);
+        currentGun++;
+        if(currentGun >= allGuns.Count)
+        {
+            currentGun = 0;
+        }
+
+        activeGun = allGuns[currentGun];
+        activeGun.gameObject.SetActive(true);
+
+        UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
     }
 }
