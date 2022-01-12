@@ -25,10 +25,15 @@ public class PlayerController : MonoBehaviour
 
     public Animator anim;
 
-    public GameObject bullet;
+    
+    
     public Transform firePoint;
 
     public Gun activeGun;
+
+    public List<Gun> allGuns = new List<Gun>();
+
+    public int currentGun;
 
     private void Awake()
     {
@@ -39,6 +44,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
+
+        activeGun = allGuns[currentGun];
+        activeGun.gameObject.SetActive(true);
     }
 
     // Update is called once per frame
