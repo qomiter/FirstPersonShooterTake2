@@ -35,6 +35,11 @@ public class PlayerController : MonoBehaviour
 
     public int currentGun;
 
+    public Transform zoomPoint, gunHolder;
+
+    private Vector3 gunStartPos;
+    public float adsSpeed = 2; 
+
     private void Awake()
     {
         instance = this;
@@ -43,9 +48,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        activeGun = allGuns[currentGun];
-        activeGun.gameObject.SetActive(true);
-        UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
+        currentGun--;
+        SwitchGun();
+
+        gunStartPos = gunHolder.localPosition;
+
     }
 
     // Update is called once per frame
@@ -150,9 +157,29 @@ public class PlayerController : MonoBehaviour
 
         }
 
+
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             SwitchGun();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            CameraController.instance.ZoomIn(activeGun.zoomAmount);
+        }
+        if (Input.GetMouseButton(1))
+        {
+            gunHolder.position = Vector3.MoveTowards(gunHolder.position, zoomPoint.position, adsSpeed * Time.deltaTime);
+        }
+        else
+        {
+            gunHolder.localPosition = Vector3.MoveTowards(gunHolder.localPosition, gunStartPos, adsSpeed * Time.deltaTime);
+        }
+
+        if (Input.GetMouseButtonUp(1))
+        {
+            CameraController.instance.ZoomOut();
         }
 
         anim.SetFloat("moveSpeed", moveInput.magnitude);
@@ -186,5 +213,7 @@ public class PlayerController : MonoBehaviour
         activeGun.gameObject.SetActive(true);
 
         UIController.instance.ammoCounter.text = "Ammo:" + activeGun.currentAmmo;
+
+        firePoint.position = activeGun.firePoint.position;
     }
 }
